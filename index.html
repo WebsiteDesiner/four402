@@ -1412,13 +1412,89 @@
         const FOUR402_TOKEN_ADDRESS = '0x...'; // FOUR402 Token Address
         const GIGGLE_ACADEMY_ADDRESS = '0xC7f501D25Ea088aeFCa8B4b3ebD936aAe12bF4A4';
         
-        // ... [Rest of the JavaScript code remains the same as before]
+        let web3;
+        let userAccount;
+        let contract;
+        
+        // Initialize Web3
+        async function initWeb3() {
+            if (typeof window.ethereum !== 'undefined') {
+                web3 = new Web3(window.ethereum);
+                try {
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const accounts = await web3.eth.getAccounts();
+                    if (accounts.length > 0) {
+                        userAccount = accounts[0];
+                        updateWalletUI();
+                        console.log('Wallet connected:', userAccount);
+                    }
+                } catch (error) {
+                    console.error('User denied account access');
+                }
+            } else {
+                alert('请安装 MetaMask 钱包');
+            }
+        }
+        
+        // Connect wallet function
+        async function connectWallet() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    userAccount = accounts[0];
+                    web3 = new Web3(window.ethereum);
+                    updateWalletUI();
+                    showToast('钱包连接成功！', 'success');
+                } catch (error) {
+                    console.error('连接失败:', error);
+                    showToast('钱包连接失败', 'error');
+                }
+            } else {
+                showToast('请安装 MetaMask 钱包', 'error');
+            }
+        }
+        
+        // Update wallet UI
+        function updateWalletUI() {
+            const connectBtn = document.getElementById('connectWallet');
+            if (userAccount) {
+                connectBtn.textContent = userAccount.slice(0, 6) + '...' + userAccount.slice(-4);
+                connectBtn.style.background = 'linear-gradient(135deg, #00ff88, #00cc66)';
+            } else {
+                connectBtn.textContent = '连接钱包';
+                connectBtn.style.background = 'linear-gradient(135deg, #00ff88, #00cc66)';
+            }
+        }
+        
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'success' ? '#00ff88' : type === 'error' ? '#ff4444' : '#333'};
+                color: white;
+                border-radius: 8px;
+                z-index: 1000;
+                font-weight: 500;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
         
         // Initialize on page load
         window.addEventListener('load', () => {
             console.log('FOURS X402 Protocol Initialized');
             console.log('HTTP 402 Payment Required - Every transaction counts for charity');
-            // initWeb3();
+            
+            // Add click event to connect wallet button
+            document.getElementById('connectWallet').addEventListener('click', connectWallet);
         });
     </script>
 </body>
