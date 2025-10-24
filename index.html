@@ -85,19 +85,37 @@
         .logo {
             display: flex;
             align-items: center;
+            gap: 15px;
         }
 
-        .logo-image {
+        .logo-icon {
+            width: 50px;
             height: 50px;
-            width: auto;
-            max-width: 200px;
-            object-fit: contain;
-            transition: transform 0.2s ease;
-            cursor: pointer;
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            color: #000;
         }
 
-        .logo-image:hover {
-            transform: scale(1.05);
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logo-text .x402 {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 28px;
+        }
+
+        .logo-text .fours {
+            color: #fff;
         }
 
         .nav {
@@ -128,33 +146,6 @@
 
         .nav a:hover::after, .nav a.active::after {
             width: 100%;
-        }
-
-        .x-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #000000;
-            padding: 8px;
-            border-radius: 6px;
-            transition: all 0.2s;
-            height: 36px;
-            min-width: 36px;
-        }
-
-        .x-link::after {
-            display: none;
-        }
-
-        .x-icon {
-            width: 20px;
-            height: 20px;
-            display: block;
-        }
-
-        .x-link:hover {
-            background: #333333;
-            transform: translateY(-1px);
         }
 
         .connect-btn {
@@ -677,7 +668,7 @@
 
         .tier-list {
             display: flex;
-            flex-direction: column;
+                flex-direction: column;
             gap: 15px;
         }
 
@@ -928,12 +919,7 @@
             
             .header-content {
                 flex-direction: column;
-                gap: 20px;
-            }
-            
-            .logo-image {
-                height: 40px;
-                max-width: 150px;
+            gap: 20px;
             }
             
             .nav {
@@ -1062,15 +1048,16 @@
         <header>
             <div class="header-content">
                 <div class="logo">
-                    <img src="logo.png" alt="FOURS X402" class="logo-image" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <div class="logo-icon">402</div>
+                    <div class="logo-text">
+                        <span class="fours">FOURS</span>
+                        <span class="x402">X402</span>
+                    </div>
                 </div>
                 <nav class="nav">
                     <a href="#claim" class="nav-link active" data-section="claim">领取空投</a>
                     <a href="#stats" class="nav-link" data-section="stats">数据统计</a>
                     <a href="#about" class="nav-link" data-section="about">关于项目</a>
-                    <a href="https://x.com/four402_bsc" target="_blank" class="x-link">
-                        <img src="X.png" alt="X" class="x-icon">
-                    </a>
                 </nav>
                 <button class="connect-btn" id="connectWallet">连接钱包</button>
             </div>
@@ -1083,7 +1070,7 @@
                 <div class="x402-badge">
                     <span class="code">X402</span>
                     <span class="desc">Payment Required Protocol</span>
-                </div>
+            </div>
                 
                 <h1>
                     <span class="highlight">FOURS X402</span><br>
@@ -1096,25 +1083,25 @@
                 <div class="giggle-badge">
                     <span>🎓</span>
                     <span>所有 FOUR402 支付将捐赠给 Giggle Academy</span>
-                </div>
+                    </div>
                 
                 <div class="token-flow">
                     <div class="token-box">
                         <div class="label">检查持有</div>
-                        <div class="value">FOUR</div>
+                        <div class="value">FOUR402</div>
                     </div>
                     <div class="arrow">→</div>
                     <div class="token-box">
                         <div class="label">支付代币</div>
                         <div class="value">FOUR402</div>
-                    </div>
+                </div>
                     <div class="arrow">→</div>
                     <div class="token-box">
                         <div class="label">领取奖励</div>
                         <div class="value">FOURS</div>
                     </div>
-                </div>
-                
+                    </div>
+                    
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-value">10亿</div>
@@ -1123,7 +1110,7 @@
                     <div class="stat-card">
                         <div class="stat-value" id="claimedAmount">0</div>
                         <div class="stat-label">已领取</div>
-                    </div>
+                </div>
                     <div class="stat-card">
                         <div class="stat-value" id="totalClaimers">0</div>
                         <div class="stat-label">参与人数</div>
@@ -1131,7 +1118,7 @@
                     <div class="stat-card">
                         <div class="stat-value" id="totalDonated">0</div>
                         <div class="stat-label">慈善捐款</div>
-                    </div>
+                </div>
                 </div>
             </div>
 
@@ -1140,7 +1127,7 @@
                 <div class="protocol-title">
                     <span class="icon">⚡</span>
                     <span>什么是 X402 机制？</span>
-                </div>
+                    </div>
                 <div class="protocol-points">
                     <div class="protocol-point">
                         <span class="number">1</span>
@@ -1165,7 +1152,7 @@
                         <span class="text">
                             <strong>100%透明慈善</strong> - 所有 FOUR402 支付直接进入 Giggle Academy 地址，链上可查
                         </span>
-                    </div>
+                </div>
                 </div>
             </div>
 
@@ -1179,14 +1166,14 @@
                         <div class="status-title">检查 X402 领取资格中...</div>
                         <div class="status-details">
                             <span>请连接钱包查看您的领取资格</span>
-                        </div>
-                    </div>
+        </div>
+    </div>
 
                     <div class="claim-info">
                         <div class="claim-info-title">
                             <span>⚡</span>
                             <span>X402 协议规则</span>
-                        </div>
+            </div>
                         <div class="claim-info-text">
                             • <strong>X402 机制</strong>：每次领取需支付 4 FOUR402 作为慈善捐款<br>
                             • <strong>资格代币</strong>：持有 FOUR 检查领取资格（最低100个）<br>
@@ -1194,7 +1181,7 @@
                             • <strong>奖励代币</strong>：领取 FOURS 作为奖励<br>
                             • <strong>防刷机制</strong>：每个地址只能领取一次<br>
                             • <strong>慈善透明</strong>：所有支付直接进入 Giggle Academy
-                        </div>
+            </div>
                     </div>
 
                     <div class="balance-display">
@@ -1205,8 +1192,8 @@
                         <div class="balance-item">
                             <div class="balance-label">可领 FOURS</div>
                             <div class="balance-value" id="claimableAmount">0</div>
-                        </div>
-                    </div>
+        </div>
+    </div>
 
                     <button class="approve-button" id="approveBtn" style="display: none;">
                         授权 FOUR402 (X402支付)
@@ -1216,7 +1203,7 @@
                         X402 支付并领取 FOURS
                     </button>
                 </div>
-
+                
                 <!-- Info Card -->
                 <div class="info-card">
                     <h3>💎 X402 等级系统</h3>
@@ -1224,7 +1211,7 @@
                         <div class="tier-item">
                             <span class="tier-requirement">≥ 10,000 FOUR</span>
                             <span class="tier-multiplier">5x</span>
-                        </div>
+                </div>
                         <div class="tier-item">
                             <span class="tier-requirement">≥ 5,000 FOUR</span>
                             <span class="tier-multiplier">4x</span>
@@ -1240,17 +1227,17 @@
                         <div class="tier-item">
                             <span class="tier-requirement">≥ 100 FOUR</span>
                             <span class="tier-multiplier">1x</span>
-                        </div>
                     </div>
-                    
+                </div>
+
                     <div class="giggle-address">
                         <strong>🎓 Giggle Academy X402 接收地址</strong>
                         <div class="address">
                             0xC7f501D25Ea088aeFCa8B4b3ebD936aAe12bF4A4
                         </div>
-                    </div>
-                </div>
-            </div>
+                        </div>
+                        </div>
+                        </div>
 
             <!-- Progress Section -->
             <div class="progress-section">
@@ -1268,13 +1255,13 @@
                     <div class="progress-item">
                         <div class="progress-value" id="remainingTokens">10亿</div>
                         <div class="progress-label">剩余 FOURS</div>
-                    </div>
+                </div>
                     <div class="progress-item">
                         <div class="progress-value" id="completionRate">0%</div>
                         <div class="progress-label">完成率</div>
-                    </div>
                 </div>
-            </div>
+                    </div>
+                    </div>
 
             <!-- Recent Claims -->
             <div class="info-card">
@@ -1284,9 +1271,9 @@
                         <span>暂无 X402 交易记录</span>
                         <span class="tx-time">-</span>
                     </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+                </div>
 
         <!-- Stats Section -->
         <div class="section" id="stats-section">
@@ -1297,15 +1284,15 @@
                         <div class="stat-card">
                             <div class="stat-value" id="stats-total-supply">10亿</div>
                             <div class="stat-label">FOURS 总供应</div>
-                        </div>
+                    </div>
                         <div class="stat-card">
                             <div class="stat-value" id="stats-total-claimed">0</div>
                             <div class="stat-label">已分发数量</div>
-                        </div>
+                </div>
                         <div class="stat-card">
                             <div class="stat-value" id="stats-total-claimers">0</div>
                             <div class="stat-label">X402 参与者</div>
-                        </div>
+                </div>
                         <div class="stat-card">
                             <div class="stat-value" id="stats-total-donated">0</div>
                             <div class="stat-label">FOUR402 捐款</div>
@@ -1319,9 +1306,9 @@
                             <div class="stat-label">预计剩余次数</div>
                         </div>
                     </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
         <!-- About Section -->
         <div class="section" id="about-section">
@@ -1410,12 +1397,12 @@
                 </div>
             </div>
         </div>
-    </div>
+                </div>
 
     <!-- Toast Notification -->
     <div class="toast" id="toast">
         <span class="toast-message" id="toastMessage"></span>
-    </div>
+                </div>
 
     <script src="https://cdn.jsdelivr.net/npm/web3@1.9.0/dist/web3.min.js"></script>
     <script>
