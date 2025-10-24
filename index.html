@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOURS X402 - Charity Payment Protocol</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #000000, #0a1f0a, #000000, #062406);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #00ff88;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+            position: relative;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff88, transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-image {
+            height: 50px;
+            width: auto;
+            max-width: 200px;
+            object-fit: contain;
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .logo-image:hover {
+            transform: scale(1.05);
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav a {
+            color: #00ff88;
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.3s;
+            position: relative;
+            padding: 5px 0;
+            cursor: pointer;
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00ff88;
+            transition: width 0.3s;
+        }
+
+        .nav a:hover::after, .nav a.active::after {
+            width: 100%;
+        }
+
+        .x-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000000;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            height: 36px;
+            min-width: 36px;
+        }
+
+        .x-link::after {
+            display: none;
+        }
+
+        .x-icon {
+            width: 20px;
+            height: 20px;
+            display: block;
+        }
+
+        .x-link:hover {
+            background: #333333;
+            transform: translateY(-1px);
+        }
+
+        .connect-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            color: #000000;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .connect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 30px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Section Container */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff88;
+            border-radius: 30px;
+            padding: 50px 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            backdrop-filter: blur(20px);
+        }
+
+        .hero::before,
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.3), transparent);
+            filter: blur(50px);
+        }
+
+        .hero::before {
+            top: -50px;
+            left: -50px;
+        }
+
+        .hero::after {
+            bottom: -50px;
+            right: -50px;
+        }
+
+        .x402-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 204, 102, 0.1));
+            border: 2px solid #00ff88;
+            border-radius: 50px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .x402-badge .code {
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+        }
+
+        .x402-badge .desc {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+            line-height: 1.2;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #00ff88, #00ffcc, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero .subtitle {
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero .subtitle-small {
+            font-size: 16px;
+            color: rgba(0, 255, 136, 0.7);
+            margin-bottom: 40px;
+        }
+
+        .protocol-explanation {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 900px;
+            text-align: left;
+        }
+
+        .protocol-title {
+            font-size: 24px;
+            color: #00ff88;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .protocol-title .icon {
+            font-size: 28px;
+        }
+
+        .protocol-points {
+            display: grid;
+            gap: 15px;
+        }
+
+        .protocol-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .protocol-point:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateX(5px);
+        }
+
+        .protocol-point .number {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            color: #000;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .protocol-point .text {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .protocol-point .text strong {
+            color: #00ff88;
+        }
+
+        .token-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .token-box {
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid #00ff88;
+            border-radius: 15px;
+            padding: 20px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .token-box .label {
+            font-size: 14px;
+            color: rgba(0, 255, 136, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .token-box .value {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00ff88, #00ffcc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .arrow {
+            font-size: 32px;
+            color: #00ff88;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .giggle-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 204, 102, 0.1));
+            border: 1px solid #00ff88;
+            border-radius: 50px;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+        }
+
+        .giggle-badge span {
+            color: #00ff88;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ff88;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00ff88, #00ffcc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: rgba(0, 255, 136, 0.6);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* Claim Card */
+        .claim-card {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff88;
+            border-radius: 25px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+        }
+
+        .claim-card h2 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .claim-card h2 .x402 {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .eligibility-status {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .eligibility-status.eligible {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .eligibility-status.not-eligible {
+            background: rgba(255, 0, 0, 0.05);
+            border-color: rgba(255, 0, 0, 0.3);
+        }
+
+        .status-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #00ff88;
+        }
+
+        .status-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tier-whale {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #000;
+        }
+
+        .tier-large {
+            background: linear-gradient(135deg, #00ffff, #0088ff);
+            color: #000;
+        }
+
+        .tier-medium {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            color: #000;
+        }
+
+        .tier-small {
+            background: linear-gradient(135deg, #88ff00, #66cc00);
+            color: #000;
+        }
+
+        .tier-basic {
+            background: linear-gradient(135deg, #888888, #666666);
+            color: #fff;
+        }
+
+        .claim-info {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 204, 102, 0.05));
+            border: 1px solid #00ff88;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .claim-info-title {
+            font-weight: 700;
+            color: #00ff88;
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .claim-info-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .claim-info-text strong {
+            color: #00ff88;
+        }
+
+        .balance-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .balance-item {
+            background: rgba(0, 255, 136, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            text-align: center;
+        }
+
+        .balance-label {
+            font-size: 13px;
+            color: rgba(0, 255, 136, 0.6);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .balance-value {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00ff88, #00ffcc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .claim-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            color: #000000;
+            border: none;
+            border-radius: 15px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .claim-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .claim-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background: #333333;
+        }
+
+        .approve-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #ffaa00, #ff8800);
+            color: #000000;
+            border: none;
+            border-radius: 15px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 20px rgba(255, 170, 0, 0.3);
+        }
+
+        .approve-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 170, 0, 0.5);
+        }
+
+        /* Info Card */
+        .info-card {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff88;
+            border-radius: 25px;
+            padding: 35px;
+            backdrop-filter: blur(20px);
+            margin-bottom: 30px;
+        }
+
+        .info-card h3 {
+            font-size: 24px;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tier-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .tier-item {
+            padding: 15px;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .tier-item:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: #00ff88;
+            transform: translateX(5px);
+        }
+
+        .tier-requirement {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .tier-multiplier {
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00ff88, #00ffcc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .giggle-address {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 204, 102, 0.05));
+            border: 1px solid #00ff88;
+            border-radius: 15px;
+        }
+
+        .giggle-address strong {
+            color: #00ff88;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .giggle-address .address {
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff88;
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(20px);
+        }
+
+        .progress-section h3 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        .progress-bar-container {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 15px;
+            height: 40px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000000;
+            font-weight: 700;
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .progress-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .progress-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 255, 136, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .progress-value {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00ff88, #00ffcc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .progress-label {
+            font-size: 13px;
+            color: rgba(0, 255, 136, 0.6);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Stats Page Specific */
+        .stats-container {
+            display: grid;
+            gap: 30px;
+        }
+
+        .stats-box {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff88;
+            border-radius: 25px;
+            padding: 35px;
+            backdrop-filter: blur(20px);
+        }
+
+        .stats-box h3 {
+            font-size: 26px;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* About Section */
+        .about-container {
+            display: grid;
+            gap: 30px;
+        }
+
+        .about-box {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #00ff88;
+            border-radius: 25px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+        }
+
+        .about-box h3 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .about-box p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .feature-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #00ff88;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .logo-image {
+                height: 40px;
+                max-width: 150px;
+            }
+            
+            .nav {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .progress-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .token-flow {
+                flex-direction: column;
+            }
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(0, 255, 136, 0.1);
+            border-top: 3px solid #00ff88;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.95);
+            padding: 18px 25px;
+            border-radius: 15px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            min-width: 300px;
+        }
+
+        .toast.success {
+            border: 1px solid #00ff88;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .toast.error {
+            border: 1px solid #ff4444;
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.3);
+        }
+
+        .toast.show {
+            display: flex;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast-message {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Transaction list */
+        .tx-list {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 15px;
+        }
+
+        .tx-item {
+            padding: 12px;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tx-item:last-child {
+            border-bottom: none;
+        }
+
+        .tx-hash {
+            color: #00ff88;
+            text-decoration: none;
+            font-family: 'Courier New', monospace;
+        }
+
+        .tx-hash:hover {
+            text-decoration: underline;
+            color: #00ffcc;
+        }
+
+        .tx-time {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <img src="logo.png" alt="FOURS X402" class="logo-image" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                </div>
+                <nav class="nav">
+                    <a href="#claim" class="nav-link active" data-section="claim">领取空投</a>
+                    <a href="#stats" class="nav-link" data-section="stats">数据统计</a>
+                    <a href="#about" class="nav-link" data-section="about">关于项目</a>
+                    <a href="https://x.com/four402_bsc" target="_blank" class="x-link">
+                        <img src="X.png" alt="X" class="x-icon">
+                    </a>
+                </nav>
+                <button class="connect-btn" id="connectWallet">连接钱包</button>
+            </div>
+        </header>
+
+        <!-- Claim Section -->
+        <div class="section active" id="claim-section">
+            <!-- Hero -->
+            <div class="hero">
+                <div class="x402-badge">
+                    <span class="code">X402</span>
+                    <span class="desc">Payment Required Protocol</span>
+                </div>
+                
+                <h1>
+                    <span class="highlight">FOURS X402</span><br>
+                    <span style="font-size: 48px; color: #fff;">慈善支付协议</span>
+                </h1>
+                
+                <p class="subtitle">每一笔交易都需要慈善支付 - HTTP 402 Payment Required</p>
+                <p class="subtitle-small">基于 FOUR 生态的创新 X402 机制空投</p>
+                
+                <div class="giggle-badge">
+                    <span>🎓</span>
+                    <span>所有 FOUR402 支付将捐赠给 Giggle Academy</span>
+                </div>
+                
+                <div class="token-flow">
+                    <div class="token-box">
+                        <div class="label">检查持有</div>
+                        <div class="value">FOUR</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="token-box">
+                        <div class="label">支付代币</div>
+                        <div class="value">FOUR402</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="token-box">
+                        <div class="label">领取奖励</div>
+                        <div class="value">FOURS</div>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">10亿</div>
+                        <div class="stat-label">FOURS 总量</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="claimedAmount">0</div>
+                        <div class="stat-label">已领取</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalClaimers">0</div>
+                        <div class="stat-label">参与人数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalDonated">0</div>
+                        <div class="stat-label">慈善捐款</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- X402 Protocol Explanation -->
+            <div class="protocol-explanation">
+                <div class="protocol-title">
+                    <span class="icon">⚡</span>
+                    <span>什么是 X402 机制？</span>
+                </div>
+                <div class="protocol-points">
+                    <div class="protocol-point">
+                        <span class="number">1</span>
+                        <span class="text">
+                            <strong>HTTP 402 状态码</strong> - "Payment Required" (需要付款)，是互联网标准中预留给未来数字支付的状态码
+                        </span>
+                    </div>
+                    <div class="protocol-point">
+                        <span class="number">2</span>
+                        <span class="text">
+                            <strong>X402 慈善协议</strong> - 我们将这个概念应用到区块链，每次领取空投都需要进行小额慈善支付
+                        </span>
+                    </div>
+                    <div class="protocol-point">
+                        <span class="number">3</span>
+                        <span class="text">
+                            <strong>三币系统</strong> - FOUR(资格验证) + FOUR402(支付媒介) = FOURS(奖励代币)
+                        </span>
+                    </div>
+                    <div class="protocol-point">
+                        <span class="number">4</span>
+                        <span class="text">
+                            <strong>100%透明慈善</strong> - 所有 FOUR402 支付直接进入 Giggle Academy 地址，链上可查
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Claim Card -->
+                <div class="claim-card">
+                    <h2>🎁 <span class="x402">X402</span> 空投领取</h2>
+                    
+                    <div class="eligibility-status" id="eligibilityStatus">
+                        <div class="status-title">检查 X402 领取资格中...</div>
+                        <div class="status-details">
+                            <span>请连接钱包查看您的领取资格</span>
+                        </div>
+                    </div>
+
+                    <div class="claim-info">
+                        <div class="claim-info-title">
+                            <span>⚡</span>
+                            <span>X402 协议规则</span>
+                        </div>
+                        <div class="claim-info-text">
+                            • <strong>X402 机制</strong>：每次领取需支付 4 FOUR402 作为慈善捐款<br>
+                            • <strong>资格代币</strong>：持有 FOUR 检查领取资格（最低100个）<br>
+                            • <strong>支付代币</strong>：使用 FOUR402 进行 X402 支付<br>
+                            • <strong>奖励代币</strong>：领取 FOURS 作为奖励<br>
+                            • <strong>防刷机制</strong>：每个地址只能领取一次<br>
+                            • <strong>慈善透明</strong>：所有支付直接进入 Giggle Academy
+                        </div>
+                    </div>
+
+                    <div class="balance-display">
+                        <div class="balance-item">
+                            <div class="balance-label">FOUR 余额</div>
+                            <div class="balance-value" id="fourBalance">0</div>
+                        </div>
+                        <div class="balance-item">
+                            <div class="balance-label">可领 FOURS</div>
+                            <div class="balance-value" id="claimableAmount">0</div>
+                        </div>
+                    </div>
+
+                    <button class="approve-button" id="approveBtn" style="display: none;">
+                        授权 FOUR402 (X402支付)
+                    </button>
+                    
+                    <button class="claim-button" id="claimBtn" disabled>
+                        X402 支付并领取 FOURS
+                    </button>
+                </div>
+
+                <!-- Info Card -->
+                <div class="info-card">
+                    <h3>💎 X402 等级系统</h3>
+                    <div class="tier-list">
+                        <div class="tier-item">
+                            <span class="tier-requirement">≥ 10,000 FOUR</span>
+                            <span class="tier-multiplier">5x</span>
+                        </div>
+                        <div class="tier-item">
+                            <span class="tier-requirement">≥ 5,000 FOUR</span>
+                            <span class="tier-multiplier">4x</span>
+                        </div>
+                        <div class="tier-item">
+                            <span class="tier-requirement">≥ 1,000 FOUR</span>
+                            <span class="tier-multiplier">3x</span>
+                        </div>
+                        <div class="tier-item">
+                            <span class="tier-requirement">≥ 500 FOUR</span>
+                            <span class="tier-multiplier">2x</span>
+                        </div>
+                        <div class="tier-item">
+                            <span class="tier-requirement">≥ 100 FOUR</span>
+                            <span class="tier-multiplier">1x</span>
+                        </div>
+                    </div>
+                    
+                    <div class="giggle-address">
+                        <strong>🎓 Giggle Academy X402 接收地址</strong>
+                        <div class="address">
+                            0xC7f501D25Ea088aeFCa8B4b3ebD936aAe12bF4A4
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="progress-section">
+                <h3>📊 X402 空投进度</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar" style="width: 0%">
+                        0%
+                    </div>
+                </div>
+                <div class="progress-details">
+                    <div class="progress-item">
+                        <div class="progress-value" id="distributedTokens">0</div>
+                        <div class="progress-label">已分发 FOURS</div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-value" id="remainingTokens">10亿</div>
+                        <div class="progress-label">剩余 FOURS</div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-value" id="completionRate">0%</div>
+                        <div class="progress-label">完成率</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Claims -->
+            <div class="info-card">
+                <h3>📜 最近 X402 交易记录</h3>
+                <div class="tx-list" id="recentClaims">
+                    <div class="tx-item">
+                        <span>暂无 X402 交易记录</span>
+                        <span class="tx-time">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="section" id="stats-section">
+            <div class="stats-container">
+                <div class="stats-box">
+                    <h3>📊 X402 协议统计</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="stats-total-supply">10亿</div>
+                            <div class="stat-label">FOURS 总供应</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="stats-total-claimed">0</div>
+                            <div class="stat-label">已分发数量</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="stats-total-claimers">0</div>
+                            <div class="stat-label">X402 参与者</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="stats-total-donated">0</div>
+                            <div class="stat-label">FOUR402 捐款</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="stats-avg-claim">0</div>
+                            <div class="stat-label">平均领取量</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="stats-remaining-claims">40,000</div>
+                            <div class="stat-label">预计剩余次数</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="section" id="about-section">
+            <div class="about-container">
+                <div class="about-box">
+                    <h3>🚀 关于 FOURS X402 协议</h3>
+                    <p>
+                        FOURS X402 是全球首个基于 HTTP 402 状态码概念的区块链慈善支付协议。
+                        我们将互联网标准中的 "Payment Required" 概念创新性地应用到代币分发中，
+                        让每一次空投领取都成为一次慈善行动。
+                    </p>
+                    <p>
+                        <strong>X402 核心理念：</strong><br>
+                        在传统互联网中，HTTP 402 是为未来数字支付预留的状态码。
+                        在区块链世界，我们赋予它新的意义 - 每一次价值转移都应该包含社会责任。
+                    </p>
+                    <p>
+                        通过 X402 机制，用户使用 FOUR402 代币进行小额支付（4枚），
+                        这些支付100%进入 Giggle Academy 教育基金，同时用户可以领取 FOURS 奖励。
+                        这创造了一个三赢局面：用户获得奖励、项目获得分发、慈善获得支持。
+                    </p>
+                </div>
+
+                <div class="about-box">
+                    <h3>⚡ X402 协议特色</h3>
+                    <div class="feature-cards">
+                        <div class="feature-card">
+                            <div class="feature-icon">🔐</div>
+                            <div class="feature-title">X402 机制</div>
+                            <div class="feature-desc">基于 HTTP 402 Payment Required 的创新支付协议</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">💎</div>
+                            <div class="feature-title">三币系统</div>
+                            <div class="feature-desc">FOUR验证 + FOUR402支付 = FOURS奖励</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🎯</div>
+                            <div class="feature-title">精准分发</div>
+                            <div class="feature-desc">基于持有量的5级倍数系统，公平合理</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">💝</div>
+                            <div class="feature-title">100%慈善</div>
+                            <div class="feature-desc">所有 X402 支付直接进入教育基金</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🔒</div>
+                            <div class="feature-title">防刷保护</div>
+                            <div class="feature-desc">每个地址仅能通过 X402 验证一次</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🌍</div>
+                            <div class="feature-title">链上透明</div>
+                            <div class="feature-desc">所有 X402 交易完全透明可查</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-box">
+                    <h3>📖 X402 代币体系</h3>
+                    <p>
+                        <strong style="color: #00ff88;">FOUR (资格验证)</strong><br>
+                        原始生态代币，用于验证用户资格和计算领取倍数。最低持有100 FOUR才能参与X402协议。
+                    </p>
+                    <p>
+                        <strong style="color: #00ff88;">FOUR402 (X402支付)</strong><br>
+                        X402协议的支付代币，每次领取需支付4枚FOUR402，象征HTTP 402状态码。
+                    </p>
+                    <p>
+                        <strong style="color: #00ff88;">FOURS (奖励代币)</strong><br>
+                        通过X402协议分发的新代币，总量10亿，100%通过X402机制分发，预计需要40,000次X402交易完成全部分发。
+                    </p>
+                </div>
+
+                <div class="about-box">
+                    <h3>🎓 Giggle Academy - X402 受益方</h3>
+                    <p>
+                        Giggle Academy 是由币安创始人 CZ (赵长鹏) 创办的免费在线教育平台。
+                        通过 X402 协议，每一笔支付都直接支持全球儿童教育事业。
+                    </p>
+                    <p>
+                        X402 不仅是一个技术协议，更是连接区块链创新与社会责任的桥梁。
+                        让我们一起通过 X402 机制，为教育事业贡献力量。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span class="toast-message" id="toastMessage"></span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.9.0/dist/web3.min.js"></script>
+    <script>
+        // Contract addresses - REPLACE WITH YOUR DEPLOYED ADDRESSES
+        const CONTRACT_ADDRESS = '0x...'; // FOURS X402 Airdrop Contract
+        const FOUR_TOKEN_ADDRESS = '0x...'; // FOUR Token Address
+        const FOUR402_TOKEN_ADDRESS = '0x...'; // FOUR402 Token Address
+        const GIGGLE_ACADEMY_ADDRESS = '0xC7f501D25Ea088aeFCa8B4b3ebD936aAe12bF4A4';
+        
+        // ... [Rest of the JavaScript code remains the same as before]
+        
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            console.log('FOURS X402 Protocol Initialized');
+            console.log('HTTP 402 Payment Required - Every transaction counts for charity');
+            // initWeb3();
+        });
+    </script>
+</body>
+</html>
