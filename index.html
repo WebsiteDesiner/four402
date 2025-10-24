@@ -1488,6 +1488,32 @@
             }, 3000);
         }
         
+        // Navigation functionality
+        function initNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.section');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetSection = link.getAttribute('data-section');
+                    
+                    // Remove active class from all links and sections
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    sections.forEach(s => s.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    link.classList.add('active');
+                    
+                    // Show target section
+                    const targetElement = document.getElementById(targetSection + '-section');
+                    if (targetElement) {
+                        targetElement.classList.add('active');
+                    }
+                });
+            });
+        }
+        
         // Initialize on page load
         window.addEventListener('load', () => {
             console.log('FOURS X402 Protocol Initialized');
@@ -1495,6 +1521,9 @@
             
             // Add click event to connect wallet button
             document.getElementById('connectWallet').addEventListener('click', connectWallet);
+            
+            // Initialize navigation
+            initNavigation();
         });
     </script>
 </body>
